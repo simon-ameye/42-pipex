@@ -1,16 +1,8 @@
 NAME = pipex
-INC = push_swap.h
+INC = pipex.h
 
-SRCS += push_swap.c
-SRCS += push.c
-SRCS += swap.c
-SRCS += rotate.c
-SRCS += reverserotate.c
-SRCS += push_swap_utils.c
-SRCS += normalize.c
-SRCS += radixsort.c
-SRCS += swapsort.c
-SRCS += push_swap_utils2.c
+SRCS += pipex.c
+SRCS += pipex_utils.c
 
 OBJS_DIR = obj/
 OBJS = $(addprefix $(OBJS_DIR),$(SRCS:.c=.o))
