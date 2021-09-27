@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/09/24 17:53:33 by sameye           ###   ########.fr       */
+/*   Updated: 2021/09/27 13:20:54 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*findpath(char *fnct, char **envp)
 	i = 0;
 	while (ft_strnstr(envp[i], "PATH", 4) == NULL)
 		i++;
-	paths = ft_split(envp[i], ':');
+	paths = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (paths[i])
 	{
@@ -49,7 +49,7 @@ int process1(t_pipex p, char **envp)
 
 	file = open(p.file1, O_RDONLY, 0777);
 	if (file == -1)
-		return(printerror("Unable to open file for process1", EXIT_FAILURE));
+		return (perrorfail());
 	dup2(file, STDIN_FILENO);
 	dup2(p.pipefd[1], STDOUT_FILENO);
 	close(p.pipefd[0]);
@@ -64,7 +64,7 @@ int process2(t_pipex p, char **envp)
 
 	file = open(p.file2, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (file == -1)
-		return (printerror("Unable to open file for process2", EXIT_FAILURE));
+		return (perrorfail());
 	dup2(file, STDOUT_FILENO);
 	dup2(p.pipefd[0], STDIN_FILENO);
 	close(p.pipefd[1]);
@@ -116,10 +116,18 @@ int fillpipex(t_pipex *p, char **av, char **envp)
 	p->file2 = av[4];
 	p->path1 = findpath(p->fnct1, envp);
 	if (p->path1 == NULL)
-		return(printerror("Command not found.", 127));
+	{
+		ft_putstr_fd("command not found: ", 1);
+		ft_putstr_fd(p->fnct1, 1);
+		ft_putstr_fd("\n", 1);
+	}
 	p->path2 = findpath(p->fnct2, envp);
 	if (p->path2 == NULL)
-		return(printerror("Command not found.", 127));
+	{
+		ft_putstr_fd("command not found: ", 1);
+		ft_putstr_fd(p->fnct2, 1);
+		ft_putstr_fd("\n", 1);
+	}
 	return(EXIT_SUCCESS);
 }
 
@@ -134,11 +142,7 @@ int	main(int ac, char **av, char **envp)
 	if (pipe(p.pipefd) == -1)
 		return(printerror("Pipe creation fail", EXIT_FAILURE));
 	initpipex(&p);
-	if (fillpipex(&p, av, envp) != EXIT_SUCCESS)
-	{
-		freepipex(&p);
-		return(127);
-	}
+	fillpipex(&p, av, envp);
 	child1 = fork();
 	if (child1 == -1)
 		return(printerror("Unable to create child1", EXIT_FAILURE));
@@ -153,4 +157,5 @@ int	main(int ac, char **av, char **envp)
 	close(p.pipefd[1]);
 	waitpid(child1, NULL, 0);
 	waitpid(child2, NULL, 0);
+	freepipex(&p);
 }

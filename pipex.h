@@ -24,5 +24,6 @@ typedef struct s_pipex
 int	printerror(char *str, int err);
 void freetab(char **tab);
 int	exiterror(char *str, int err);
+int perrorfail(void);
 
 #endif
