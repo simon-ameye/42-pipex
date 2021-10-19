@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/09/27 14:51:12 by sameye           ###   ########.fr       */
+/*   Updated: 2021/10/19 12:42:08 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*findpath(char *fnct, char **envp)
 		i++;
 	}
 	freetab(paths);
-	return (printcmdnotfound(fnct));
+	return (printnotfound("command not found: ", fnct));
 }
 
 /*run a command with file as input and put result in pipe*/
@@ -49,7 +49,10 @@ int	process1(t_pipex p, char **envp)
 
 	file = open(p.file1, O_RDONLY, 0777);
 	if (file == -1)
+	{
+		printnotfound("no such file or directory: ", p.file1);
 		return (EXIT_FAILURE);
+	}
 	dup2(file, STDIN_FILENO);
 	dup2(p.pipefd[1], STDOUT_FILENO);
 	close(p.pipefd[0]);

@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 20:10:11 by sameye            #+#    #+#             */
-/*   Updated: 2021/09/27 14:51:22 by sameye           ###   ########.fr       */
+/*   Updated: 2021/10/19 12:44:17 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int	printerror(char *str, int err)
 	return (err);
 }
 
-char	*printcmdnotfound(char *fnct)
+char	*printnotfound(char *error, char *fnct)
 {
-	ft_putstr_fd("command not found: ", 1);
+	ft_putstr_fd(error, 1);
 	ft_putstr_fd(fnct, 1);
 	ft_putstr_fd("\n", 1);
 	return (NULL);

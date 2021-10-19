@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 14:52:26 by sameye            #+#    #+#             */
-/*   Updated: 2021/09/27 14:53:05 by sameye           ###   ########.fr       */
+/*   Updated: 2021/10/19 12:41:09 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@ int		freepipex(t_pipex *p);
 int		fillpipex(t_pipex *p, char **av, char **envp);
 int		printerror(char *str, int err);
 void	freetab(char **tab);
-char	*printcmdnotfound(char *fnct);
+char	*printnotfound(char *error, char *fnct);
 
 #endif
