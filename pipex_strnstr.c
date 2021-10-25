@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnstr.c                                       :+:      :+:    :+:   */
+/*   pipex_strnstr.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/06 00:26:23 by sameye            #+#    #+#             */
-/*   Updated: 2021/05/21 21:35:42 by sameye           ###   ########.fr       */
+/*   Created: 2021/10/25 13:42:02 by sameye            #+#    #+#             */
+/*   Updated: 2021/10/25 13:42:14 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
 static int	ft_is_found(const char *haystack, size_t i,
 				const char *needle, size_t len)

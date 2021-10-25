@@ -1,36 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   pipex_substr.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/06 00:25:06 by sameye            #+#    #+#             */
-/*   Updated: 2021/05/21 22:56:32 by sameye           ###   ########.fr       */
+/*   Created: 2021/10/25 13:38:01 by sameye            #+#    #+#             */
+/*   Updated: 2021/10/25 13:41:48 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	int	i;
+	char	*str;
+	size_t	i;
+	size_t	j;
 
-	i = 0;
-	if (c != '\0')
+	i = (size_t)start;
+	j = 0;
+	if (!s)
+		return (NULL);
+	str = malloc(sizeof(char) * (len + 1));
+	if (!(str))
+		return (NULL);
+	if (start > ft_strlen(s))
 	{
-		while (s[i])
-		{
-			if (s[i] == (char)c)
-				return ((char *)&(s[i]));
-			i++;
-		}
+		str[0] = '\0';
+		return (str);
 	}
-	else
+	while (len > 0 && s[i] != '\0')
 	{
-		while (s[i])
-			i++;
-		return ((char *)&(s[i]));
+		str[j] = s[i];
+		len--;
+		i++;
+		j++;
 	}
-	return (NULL);
+	str[j] = '\0';
+	return (str);
 }

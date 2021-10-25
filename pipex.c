@@ -6,13 +6,12 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/10/19 12:42:08 by sameye           ###   ########.fr       */
+/*   Updated: 2021/10/25 13:20:41 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-/*find PATH in envp and try to find fnct path inside*/
 char	*findpath(char *fnct, char **envp)
 {
 	int		i;
@@ -42,7 +41,6 @@ char	*findpath(char *fnct, char **envp)
 	return (printnotfound("command not found: ", fnct));
 }
 
-/*run a command with file as input and put result in pipe*/
 int	process1(t_pipex p, char **envp)
 {
 	int	file;
@@ -60,7 +58,6 @@ int	process1(t_pipex p, char **envp)
 	return (EXIT_SUCCESS);
 }
 
-/*run a command with pipe as input and put result in file*/
 int	process2(t_pipex p, char **envp)
 {
 	int	file;
@@ -75,7 +72,6 @@ int	process2(t_pipex p, char **envp)
 	return (EXIT_SUCCESS);
 }
 
-/*init p struct with file, path and cmd data*/
 int	fillpipex(t_pipex *p, char **av, char **envp)
 {
 	p->cmd1 = ft_split(av[2], ' ');
