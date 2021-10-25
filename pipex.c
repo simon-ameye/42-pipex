@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/10/25 13:20:41 by sameye           ###   ########.fr       */
+/*   Updated: 2021/10/25 16:34:04 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*findpath(char *fnct, char **envp)
 		i++;
 	}
 	freetab(paths);
-	return (printnotfound("command not found: ", fnct));
+	return (NULL);
 }
 
 int	process1(t_pipex p, char **envp)
@@ -48,13 +48,14 @@ int	process1(t_pipex p, char **envp)
 	file = open(p.file1, O_RDONLY, 0777);
 	if (file == -1)
 	{
-		printnotfound("no such file or directory: ", p.file1);
+		errorreturn();
 		return (EXIT_FAILURE);
 	}
 	dup2(file, STDIN_FILENO);
 	dup2(p.pipefd[1], STDOUT_FILENO);
 	close(p.pipefd[0]);
-	execve(p.path1, p.cmd1, envp);
+	if (execve(p.path1, p.cmd1, envp) == -1)
+		errorreturn();
 	return (EXIT_SUCCESS);
 }
 
@@ -64,11 +65,15 @@ int	process2(t_pipex p, char **envp)
 
 	file = open(p.file2, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (file == -1)
+	{
+		errorreturn();
 		return (EXIT_FAILURE);
+	}
 	dup2(file, STDOUT_FILENO);
 	dup2(p.pipefd[0], STDIN_FILENO);
 	close(p.pipefd[1]);
-	execve(p.path2, p.cmd2, envp);
+	if (execve(p.path2, p.cmd2, envp) == -1)
+		errorreturn();
 	return (EXIT_SUCCESS);
 }
 
@@ -92,18 +97,18 @@ int	main(int ac, char **av, char **envp)
 	int		child2;
 
 	if (ac != 5)
-		return (printerror("Wrong number of arguments", EXIT_FAILURE));
+		return (printerror2("Error: Wrong arguments", "", EXIT_FAILURE));
 	if (pipe(p.pipefd) == -1)
-		return (printerror("Pipe creation fail", EXIT_FAILURE));
+		errorreturn();
 	fillpipex(&p, av, envp);
 	child1 = fork();
 	if (child1 == -1)
-		return (printerror("Unable to create child1", EXIT_FAILURE));
+		errorreturn();
 	if (child1 == 0)
 		process1(p, envp);
 	child2 = fork();
 	if (child2 == -1)
-		return (printerror("Unable to create child2", EXIT_FAILURE));
+		errorreturn();
 	if (child2 == 0)
 		process2(p, envp);
 	close(p.pipefd[0]);

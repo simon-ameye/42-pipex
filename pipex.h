@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 14:52:26 by sameye            #+#    #+#             */
-/*   Updated: 2021/10/25 13:51:03 by sameye           ###   ########.fr       */
+/*   Updated: 2021/10/25 16:34:34 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ int		process1(t_pipex p, char **envp);
 int		process2(t_pipex p, char **envp);
 int		fillpipex(t_pipex *p, char **av, char **envp);
 int		main(int ac, char **av, char **envp);
-int		printerror(char *str, int err);
-char	*printnotfound(char *error, char *fnct);
 void	freetab(char **tab);
 int		initpipex(t_pipex *p);
 int		freepipex(t_pipex *p);
@@ -50,5 +48,7 @@ size_t	ft_strlen(const char *str);
 char	*ft_strnstr(const char *haystack,
 			const char *needle, size_t len);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
+void	errorreturn(void);
+int		printerror2(char *str1, char *str2, int err);
 
 #endif
