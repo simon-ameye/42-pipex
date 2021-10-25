@@ -6,29 +6,11 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 20:10:11 by sameye            #+#    #+#             */
-/*   Updated: 2021/10/25 15:16:27 by sameye           ###   ########.fr       */
+/*   Updated: 2021/10/25 16:35:32 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-/*
-int	printerror(char *str, int err)
-{
-	ft_putstr_fd("Error: ", 1);
-	ft_putstr_fd(str, 1);
-	ft_putstr_fd("\n", 1);
-	return (err);
-}
-
-char	*printnotfound(char *error, char *fnct)
-{
-	ft_putstr_fd(error, 1);
-	ft_putstr_fd(fnct, 1);
-	ft_putstr_fd("\n", 1);
-	return (NULL);
-}
-*/
 
 int	printerror2(char *str1, char *str2, int err)
 {
