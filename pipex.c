@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/10/28 18:05:28 by sameye           ###   ########.fr       */
+/*   Updated: 2021/10/28 18:12:45 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	main(int ac, char **av, char **envp)
 }
 
 
-
+/*
 2 lignes secu ajouter split en début
 et free
 leaks avec un argumebt null
@@ -129,3 +129,4 @@ commandes en relatif ex : ./
 Pas executer avec un chemin faux !
 => écrire sois même les erreurs
 relink : voir les photos
+*/
