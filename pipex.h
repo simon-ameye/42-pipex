@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 14:52:26 by sameye            #+#    #+#             */
-/*   Updated: 2021/10/25 16:34:34 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/02 17:18:51 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ typedef struct s_pipex
 {
 	char	**cmd1;
 	char	**cmd2;
-	char	*fnct1;
-	char	*fnct2;
 	char	*path1;
 	char	*path2;
 	char	*file1;
@@ -34,8 +32,8 @@ typedef struct s_pipex
 }			t_pipex;
 
 char	*findpath(char *fnct, char **envp);
-int		process1(t_pipex p, char **envp);
-int		process2(t_pipex p, char **envp);
+void		process1(t_pipex p, char **envp);
+void		process2(t_pipex p, char **envp);
 int		fillpipex(t_pipex *p, char **av, char **envp);
 int		main(int ac, char **av, char **envp);
 void	freetab(char **tab);

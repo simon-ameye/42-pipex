@@ -6,11 +6,16 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/10/28 18:12:45 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/02 17:54:29 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+int		isabsolute(char *cmd)
+{
+	return (cmd[0] == '/' || cmd[0] == '.' || cmd[0] == '~');
+}
 
 char	*findpath(char *fnct, char **envp)
 {
@@ -38,55 +43,74 @@ char	*findpath(char *fnct, char **envp)
 		i++;
 	}
 	freetab(paths);
+	printerror2("command not found: ", fnct, EXIT_FAILURE);
 	return (NULL);
 }
 
-int	process1(t_pipex p, char **envp)
+void	process1(t_pipex p, char **envp)
 {
 	int	file;
 
 	file = open(p.file1, O_RDONLY, 0777);
 	if (file == -1)
-	{
 		errorreturn();
-		return (EXIT_FAILURE);
-	}
 	dup2(file, STDIN_FILENO);
 	dup2(p.pipefd[1], STDOUT_FILENO);
 	close(p.pipefd[0]);
+	if (p.path1 == NULL)
+		exit(EXIT_SUCCESS);
 	if (execve(p.path1, p.cmd1, envp) == -1)
 		errorreturn();
-	return (EXIT_SUCCESS);
 }
 
-int	process2(t_pipex p, char **envp)
+void	process2(t_pipex p, char **envp)
 {
 	int	file;
 
 	file = open(p.file2, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (file == -1)
-	{
 		errorreturn();
-		return (EXIT_FAILURE);
-	}
 	dup2(file, STDOUT_FILENO);
 	dup2(p.pipefd[0], STDIN_FILENO);
 	close(p.pipefd[1]);
+	if (p.path2 == NULL)
+		exit(EXIT_SUCCESS);
 	if (execve(p.path2, p.cmd2, envp) == -1)
 		errorreturn();
-	return (EXIT_SUCCESS);
+}
+
+char *threatcmd(char *cmd, char **envp)
+{
+	if (cmd != NULL)
+		if (isabsolute(cmd))
+		{
+			if (access(cmd, F_OK) != 0)
+			{
+				printerror2("no such file or directory: ", cmd, EXIT_FAILURE);
+				return (NULL);
+			}
+			return (ft_strjoin(cmd, ""));
+		}
+		else
+			return (findpath(cmd, envp));
+	else
+		return (NULL);
 }
 
 int	fillpipex(t_pipex *p, char **av, char **envp)
 {
 	p->cmd1 = ft_split(av[2], ' ');
 	p->cmd2 = ft_split(av[3], ' ');
-	p->fnct1 = p->cmd1[0];
-	p->fnct2 = p->cmd2[0];
 	p->file1 = av[1];
 	p->file2 = av[4];
-	p->path1 = findpath(p->fnct1, envp);
-	p->path2 = findpath(p->fnct2, envp);
+	if (p->cmd1 == NULL)
+		p->path1 = NULL;
+	else
+		p->path1 = threatcmd(p->cmd1[0], envp);
+	if (p->cmd2 == NULL)
+		p->path2 = NULL;
+	else
+		p->path2 = threatcmd(p->cmd2[0], envp);
 	return (EXIT_SUCCESS);
 }
 
@@ -117,7 +141,6 @@ int	main(int ac, char **av, char **envp)
 	waitpid(child2, NULL, 0);
 	freepipex(&p);
 }
-
 
 /*
 2 lignes secu ajouter split en début
