@@ -8,22 +8,21 @@ SRCS += pipex_substr.c
 SRCS += pipex_split.c
 SRCS += pipex_strnstr.c
 
+OBJS_DIR = obj
+OBJS = $(addprefix $(OBJS_DIR)/,$(SRCS:.c=.o))
+CC = clang -Wall -Wextra -Werror
 
-OBJS_DIR = obj/
-OBJS = $(addprefix $(OBJS_DIR),$(SRCS:.c=.o))
-
-CC = gcc -Wall -Wextra -Werror
-
-all: $(NAME)
-
-$(NAME) : $(OBJS)
-	$(CC) $(OBJS) -lm -o $(NAME)
-
-$(OBJS): $(OBJS_DIR)%.o: %.c $(OBJS_DIR)
-	$(CC) -c $< -o $@
+all : $(OBJS_DIR) $(NAME)
 
 $(OBJS_DIR):
-	mkdir $@
+	mkdir -p $(OBJS_DIR)
+
+$(NAME) : $(OBJS)
+	$(CC) $(OBJS) -o $@
+
+$(OBJS_DIR)/%.o : %.c
+	@echo "compiling $<"
+	@$(CC) -c $< -o $@
 
 bonus : all
 
