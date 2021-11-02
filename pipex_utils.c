@@ -42,17 +42,16 @@ int	initpipex(t_pipex *p)
 	return (EXIT_SUCCESS);
 }
 
-int	freepipex(t_pipex *p)
+void	freepipex(t_pipex *p)
 {
 	if (p->cmd1 != NULL)
 		freetab(p->cmd1);
-	if (p->cmd2 != NULL)
-		freetab(p->cmd2);
 	if (p->path1 != NULL)
 		free(p->path1);
+	if (p->cmd2 != NULL)
+		freetab(p->cmd2);
 	if (p->path2 != NULL)
 		free(p->path2);
-	return (EXIT_SUCCESS);
 }
 
 void	errorreturn(void)

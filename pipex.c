@@ -97,21 +97,28 @@ char *threatcmd(char *cmd, char **envp)
 		return (NULL);
 }
 
-int	fillpipex(t_pipex *p, char **av, char **envp)
+void	fillpipex(t_pipex *p, char **av, char **envp)
 {
-	p->cmd1 = ft_split(av[2], ' ');
-	p->cmd2 = ft_split(av[3], ' ');
 	p->file1 = av[1];
+	if (av[2] != NULL)
+	{
+		if (av[2][0] != '\0')
+		{
+			p->cmd1 = ft_split(av[2], ' ');
+			if (p->cmd1 != NULL)
+				p->path1 = threatcmd(p->cmd1[0], envp);
+		}
+	}
 	p->file2 = av[4];
-	if (p->cmd1 == NULL)
-		p->path1 = NULL;
-	else
-		p->path1 = threatcmd(p->cmd1[0], envp);
-	if (p->cmd2 == NULL)
-		p->path2 = NULL;
-	else
-		p->path2 = threatcmd(p->cmd2[0], envp);
-	return (EXIT_SUCCESS);
+	if (av[3] != NULL)
+	{
+		if (av[3][0] != '\0')
+		{
+			p->cmd2 = ft_split(av[3], ' ');
+			if (p->cmd2 != NULL)
+				p->path2 = threatcmd(p->cmd2[0], envp);
+		}
+	}
 }
 
 int	main(int ac, char **av, char **envp)
@@ -124,15 +131,22 @@ int	main(int ac, char **av, char **envp)
 		return (printerror2("Error: Wrong arguments", "", EXIT_FAILURE));
 	if (pipe(p.pipefd) == -1)
 		errorreturn();
+	initpipex(&p);
 	fillpipex(&p, av, envp);
 	child1 = fork();
 	if (child1 == -1)
+	{
+		freepipex(&p);
 		errorreturn();
+	}
 	if (child1 == 0)
 		process1(p, envp);
 	child2 = fork();
 	if (child2 == -1)
+	{
+		freepipex(&p);
 		errorreturn();
+	}
 	if (child2 == 0)
 		process2(p, envp);
 	close(p.pipefd[0]);

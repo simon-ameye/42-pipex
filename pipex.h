@@ -34,11 +34,11 @@ typedef struct s_pipex
 char	*findpath(char *fnct, char **envp);
 void		process1(t_pipex p, char **envp);
 void		process2(t_pipex p, char **envp);
-int		fillpipex(t_pipex *p, char **av, char **envp);
+void		fillpipex(t_pipex *p, char **av, char **envp);
 int		main(int ac, char **av, char **envp);
 void	freetab(char **tab);
 int		initpipex(t_pipex *p);
-int		freepipex(t_pipex *p);
+void		freepipex(t_pipex *p);
 void	ft_putstr_fd(char *str, int fd);
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char const *s1, char const *s2);
