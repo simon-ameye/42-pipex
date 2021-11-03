@@ -43,80 +43,82 @@ char	*findpath(char *fnct, char **envp)
 		i++;
 	}
 	freetab(paths);
-	printerror2("command not found: ", fnct, EXIT_FAILURE);
+	printerror("command not found: ", fnct, EXIT_FAILURE);
 	return (NULL);
 }
 
-void	process1(t_pipex p, char **envp)
+void	process1(t_pipex *p, char **envp)
 {
-	int	file;
-
-	file = open(p.file1, O_RDONLY, 0777);
-	if (file == -1)
-		errorreturn();
-	dup2(file, STDIN_FILENO);
-	dup2(p.pipefd[1], STDOUT_FILENO);
-	close(p.pipefd[0]);
-	if (p.path1 == NULL)
-		exit(EXIT_SUCCESS);
-	if (execve(p.path1, p.cmd1, envp) == -1)
-		errorreturn();
+	if (p->fdfile1 == -1)
+		errorfree(p);
+	dup2(p->fdfile1, STDIN_FILENO);
+	dup2(p->pipefd[1], STDOUT_FILENO);
+	close(p->pipefd[0]);
+	if (p->path1 != NULL)
+	{
+		if (execve(p->path1, p->cmd1, envp) == -1)
+			errorfree(p);
+	}
+	freepipex(p);
+	exit(EXIT_FAILURE);
 }
 
-void	process2(t_pipex p, char **envp)
+void	process2(t_pipex *p, char **envp)
 {
-	int	file;
-
-	file = open(p.file2, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (file == -1)
-		errorreturn();
-	dup2(file, STDOUT_FILENO);
-	dup2(p.pipefd[0], STDIN_FILENO);
-	close(p.pipefd[1]);
-	if (p.path2 == NULL)
-		exit(EXIT_SUCCESS);
-	if (execve(p.path2, p.cmd2, envp) == -1)
-		errorreturn();
+	if (p->fdfile2 == -1)
+		errorfree(p);
+	dup2(p->fdfile2, STDOUT_FILENO);
+	dup2(p->pipefd[0], STDIN_FILENO);
+	close(p->pipefd[1]);
+	if (p->path2 == NULL)
+	{
+		freepipex(p);
+		exit(EXIT_FAILURE);
+	}
+	if (execve(p->path2, p->cmd2, envp) == -1)
+		errorfree(p);
 }
 
 char *threatcmd(char *cmd, char **envp)
 {
 	if (cmd != NULL)
+	{
 		if (isabsolute(cmd))
 		{
 			if (access(cmd, F_OK) != 0)
 			{
-				printerror2("no such file or directory: ", cmd, EXIT_FAILURE);
+				printerror("no such file or directory: ", cmd, EXIT_FAILURE);
 				return (NULL);
 			}
 			return (ft_strjoin(cmd, ""));
 		}
 		else
 			return (findpath(cmd, envp));
-	else
-		return (NULL);
+	}
+	return (NULL);
 }
 
 void	fillpipex(t_pipex *p, char **av, char **envp)
 {
-	p->file1 = av[1];
+
 	if (av[2] != NULL)
 	{
 		if (av[2][0] != '\0')
 		{
 			p->cmd1 = ft_split(av[2], ' ');
 			if (p->cmd1 != NULL)
-				p->path1 = threatcmd(p->cmd1[0], envp);
+				p->path1 = threatcmd((p->cmd1)[0], envp);
 		}
 	}
-	p->file2 = av[4];
 	if (av[3] != NULL)
 	{
 		if (av[3][0] != '\0')
 		{
 			p->cmd2 = ft_split(av[3], ' ');
 			if (p->cmd2 != NULL)
-				p->path2 = threatcmd(p->cmd2[0], envp);
+			{
+				p->path2 = threatcmd((p->cmd2)[0], envp);
+			}
 		}
 	}
 }
@@ -127,32 +129,30 @@ int	main(int ac, char **av, char **envp)
 	int		child1;
 	int		child2;
 
-	if (ac != 5)
-		return (printerror2("Error: Wrong arguments", "", EXIT_FAILURE));
-	if (pipe(p.pipefd) == -1)
-		errorreturn();
 	initpipex(&p);
+	if (ac != 5)
+		return (printerror("Error: Wrong arguments", "", EXIT_FAILURE));
+	if (pipe(p.pipefd) == -1)
+		errorfree(&p);
+	p->fdfile1 = open(av[1], O_RDONLY, 0777);
+	p->fdfile2 = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	fillpipex(&p, av, envp);
 	child1 = fork();
 	if (child1 == -1)
-	{
-		freepipex(&p);
-		errorreturn();
-	}
+		errorfree(&p);
 	if (child1 == 0)
-		process1(p, envp);
+		process1(&p, envp);
 	child2 = fork();
 	if (child2 == -1)
-	{
-		freepipex(&p);
-		errorreturn();
-	}
+		errorfree(&p);
 	if (child2 == 0)
-		process2(p, envp);
-	close(p.pipefd[0]);
-	close(p.pipefd[1]);
+		process2(&p, envp);
 	waitpid(child1, NULL, 0);
+	close(p.pipefd[1]);
 	waitpid(child2, NULL, 0);
+	close(p.pipefd[0]);
+	close(p.fdfile1);
+	close(p.fdfile2);
 	freepipex(&p);
 }
 
@@ -166,4 +166,5 @@ commandes en relatif ex : ./
 Pas executer avec un chemin faux !
 => écrire sois même les erreurs
 relink : voir les photos
+proteger les fd lors d'une erreur de lecture
 */

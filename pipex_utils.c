@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-int	printerror2(char *str1, char *str2, int err)
+int	printerror(char *str1, char *str2, int err)
 {
 	ft_putstr_fd(str1, 1);
 	ft_putstr_fd(str2, 1);
@@ -33,13 +33,12 @@ void	freetab(char **tab)
 	free(tab);
 }
 
-int	initpipex(t_pipex *p)
+void	initpipex(t_pipex *p)
 {
 	p->cmd1 = NULL;
 	p->cmd2 = NULL;
 	p->path1 = NULL;
 	p->path2 = NULL;
-	return (EXIT_SUCCESS);
 }
 
 void	freepipex(t_pipex *p)
@@ -54,8 +53,9 @@ void	freepipex(t_pipex *p)
 		free(p->path2);
 }
 
-void	errorreturn(void)
+void errorfree(t_pipex *p)
 {
+	freepipex(p);
 	perror("Error");
 	exit(EXIT_FAILURE);
 }

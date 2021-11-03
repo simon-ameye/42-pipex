@@ -26,18 +26,18 @@ typedef struct s_pipex
 	char	**cmd2;
 	char	*path1;
 	char	*path2;
-	char	*file1;
-	char	*file2;
 	int		pipefd[2];
+	int		fdfile1;
+	int		fdfile2;
 }			t_pipex;
 
 char	*findpath(char *fnct, char **envp);
-void		process1(t_pipex p, char **envp);
-void		process2(t_pipex p, char **envp);
+void		process1(t_pipex *p, char **envp);
+void		process2(t_pipex *p, char **envp);
 void		fillpipex(t_pipex *p, char **av, char **envp);
 int		main(int ac, char **av, char **envp);
 void	freetab(char **tab);
-int		initpipex(t_pipex *p);
+void		initpipex(t_pipex *p);
 void		freepipex(t_pipex *p);
 void	ft_putstr_fd(char *str, int fd);
 char	**ft_split(char const *s, char c);
@@ -46,7 +46,8 @@ size_t	ft_strlen(const char *str);
 char	*ft_strnstr(const char *haystack,
 			const char *needle, size_t len);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-void	errorreturn(void);
-int		printerror2(char *str1, char *str2, int err);
+int		printerror(char *str1, char *str2, int err);
+void errorfree(t_pipex *p);
+
 
 #endif
