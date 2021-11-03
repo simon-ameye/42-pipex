@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 20:10:11 by sameye            #+#    #+#             */
-/*   Updated: 2021/10/25 16:35:32 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/03 18:46:12 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ char	*findpath(char *fnct, char **envp)
 	while (ft_strnstr(envp[i], "PATH", 4) == NULL)
 		i++;
 	paths = ft_split(envp[i] + 5, ':');
-	i = 0;
-	while (paths[i])
+	i = -1;
+	while (paths[++i])
 	{
 		testpath1 = ft_strjoin(paths[i], "/");
 		testpath2 = ft_strjoin(testpath1, fnct);
@@ -35,7 +35,6 @@ char	*findpath(char *fnct, char **envp)
 			return (testpath2);
 		}
 		free(testpath2);
-		i++;
 	}
 	freetab(paths);
 	printerror("command not found: ", fnct, EXIT_FAILURE);

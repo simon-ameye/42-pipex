@@ -6,13 +6,13 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/25 13:05:25 by sameye            #+#    #+#             */
-/*   Updated: 2021/10/25 16:35:57 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/03 18:47:43 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void errorfree(t_pipex *p)
+void	errorfree(t_pipex *p)
 {
 	freepipex(p);
 	perror("Error");

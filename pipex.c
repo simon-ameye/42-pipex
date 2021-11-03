@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/11/02 17:54:29 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/03 18:40:26 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	process(t_pipex *p, char **envp, int i)
 	exit(EXIT_FAILURE);
 }
 
-char *threatcmd(char *cmd, char **envp)
+char	*threatcmd(char *cmd, char **envp)
 {
 	if (cmd != NULL)
 	{
@@ -60,9 +60,9 @@ void	fillpipex(t_pipex *p, char *str, char **envp, int index)
 	}
 }
 
-void createforks(t_pipex *p, char **av, char **envp)
+void	createforks(t_pipex *p, char **av, char **envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i <= 1)
@@ -101,16 +101,3 @@ int	main(int ac, char **av, char **envp)
 	createforks(&p, av, envp);
 	freepipex(&p);
 }
-
-/*
-2 lignes secu ajouter split en début
-et free
-leaks avec un argumebt null
-chemin absolu
-valgrind leaks lors du pas de droits chmod
-commandes en relatif ex : ./
-Pas executer avec un chemin faux !
-=> écrire sois même les erreurs
-relink : voir les photos
-proteger les fd lors d'une erreur de lecture
-*/
