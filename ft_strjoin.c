@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils2.c                                     :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,24 +12,40 @@
 
 #include "pipex.h"
 
-void errorfree(t_pipex *p)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	freepipex(p);
-	perror("Error");
-	exit(EXIT_FAILURE);
+	char	*str;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	if (!(s1) || !(s2))
+		return (NULL);
+	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!(str))
+		return (NULL);
+	while (s1[i] != '\0')
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (s2[j] != '\0')
+	{
+		str[i] = s2[j];
+		i++;
+		j++;
+	}
+	str[i] = '\0';
+	return (str);
 }
 
-void	ft_putstr_fd(char *str, int fd)
+size_t	ft_strlen(const char *str)
 {
-	if (!str)
-		return ;
-	write(fd, str, ft_strlen(str));
-}
+	size_t	i;
 
-int	printerror(char *str1, char *str2, int err)
-{
-	ft_putstr_fd(str1, 1);
-	ft_putstr_fd(str2, 1);
-	ft_putstr_fd("\n", 1);
-	return (err);
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
 }

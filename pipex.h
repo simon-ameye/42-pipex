@@ -22,19 +22,16 @@
 
 typedef struct s_pipex
 {
-	char	**cmd1;
-	char	**cmd2;
-	char	*path1;
-	char	*path2;
+	char	**cmd[2];
+	char	*path[2];
+	int		inpt[2];
+	int		oupt[2];
 	int		pipefd[2];
-	int		fdfile1;
-	int		fdfile2;
+	int		pid[2];
 }			t_pipex;
 
 char	*findpath(char *fnct, char **envp);
-void		process1(t_pipex *p, char **envp);
-void		process2(t_pipex *p, char **envp);
-void		fillpipex(t_pipex *p, char **av, char **envp);
+void	fillpipex(t_pipex *p, char *str, char **envp, int index);
 int		main(int ac, char **av, char **envp);
 void	freetab(char **tab);
 void		initpipex(t_pipex *p);
@@ -48,6 +45,9 @@ char	*ft_strnstr(const char *haystack,
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 int		printerror(char *str1, char *str2, int err);
 void errorfree(t_pipex *p);
+void	process(t_pipex *p, char **envp, int index);
+void createforks(t_pipex *p, char **av, char **envp);
+
 
 
 #endif

@@ -12,12 +12,34 @@
 
 #include "pipex.h"
 
-int	printerror(char *str1, char *str2, int err)
+char	*findpath(char *fnct, char **envp)
 {
-	ft_putstr_fd(str1, 1);
-	ft_putstr_fd(str2, 1);
-	ft_putstr_fd("\n", 1);
-	return (err);
+	int		i;
+	char	**paths;
+	char	*testpath1;
+	char	*testpath2;
+
+	i = 0;
+	while (ft_strnstr(envp[i], "PATH", 4) == NULL)
+		i++;
+	paths = ft_split(envp[i] + 5, ':');
+	i = 0;
+	while (paths[i])
+	{
+		testpath1 = ft_strjoin(paths[i], "/");
+		testpath2 = ft_strjoin(testpath1, fnct);
+		free(testpath1);
+		if (access(testpath2, F_OK) == 0)
+		{
+			freetab(paths);
+			return (testpath2);
+		}
+		free(testpath2);
+		i++;
+	}
+	freetab(paths);
+	printerror("command not found: ", fnct, EXIT_FAILURE);
+	return (NULL);
 }
 
 void	freetab(char **tab)
@@ -35,27 +57,20 @@ void	freetab(char **tab)
 
 void	initpipex(t_pipex *p)
 {
-	p->cmd1 = NULL;
-	p->cmd2 = NULL;
-	p->path1 = NULL;
-	p->path2 = NULL;
+	p->cmd[0] = NULL;
+	p->cmd[1] = NULL;
+	p->path[0] = NULL;
+	p->path[1] = NULL;
 }
 
 void	freepipex(t_pipex *p)
 {
-	if (p->cmd1 != NULL)
-		freetab(p->cmd1);
-	if (p->path1 != NULL)
-		free(p->path1);
-	if (p->cmd2 != NULL)
-		freetab(p->cmd2);
-	if (p->path2 != NULL)
-		free(p->path2);
-}
-
-void errorfree(t_pipex *p)
-{
-	freepipex(p);
-	perror("Error");
-	exit(EXIT_FAILURE);
+	if (p->cmd[0] != NULL)
+		freetab(p->cmd[0]);
+	if (p->path[0] != NULL)
+		free(p->path[0]);
+	if (p->cmd[1] != NULL)
+		freetab(p->cmd[1]);
+	if (p->path[1] != NULL)
+		free(p->path[1]);
 }

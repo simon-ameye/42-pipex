@@ -4,9 +4,10 @@ INC = pipex.h
 SRCS += pipex.c
 SRCS += pipex_utils.c
 SRCS += pipex_utils2.c
-SRCS += pipex_substr.c
-SRCS += pipex_split.c
-SRCS += pipex_strnstr.c
+SRCS += ft_substr.c
+SRCS += ft_split.c
+SRCS += ft_strnstr.c
+SRCS += ft_strjoin.c
 
 OBJS_DIR = obj
 OBJS = $(addprefix $(OBJS_DIR)/,$(SRCS:.c=.o))
