@@ -12,11 +12,11 @@
 
 #include "pipex.h"
 
-void	errorfree(t_pipex *p)
+int	printperror(char *str)
 {
-	freepipex(p);
-	perror("Error");
-	exit(EXIT_FAILURE);
+	perror("");
+	ft_putstr_fd(str, 2);
+	return(EXIT_FAILURE);
 }
 
 void	ft_putstr_fd(char *str, int fd)
@@ -28,8 +28,8 @@ void	ft_putstr_fd(char *str, int fd)
 
 int	printerror(char *str1, char *str2, int err)
 {
-	ft_putstr_fd(str1, 1);
-	ft_putstr_fd(str2, 1);
-	ft_putstr_fd("\n", 1);
+	ft_putstr_fd(str1, 2);
+	ft_putstr_fd(str2, 2);
+	ft_putstr_fd("\n", 2);
 	return (err);
 }

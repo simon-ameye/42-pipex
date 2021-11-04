@@ -56,20 +56,14 @@ void	freetab(char **tab)
 
 void	initpipex(t_pipex *p)
 {
-	p->cmd[0] = NULL;
-	p->cmd[1] = NULL;
-	p->path[0] = NULL;
-	p->path[1] = NULL;
+	p->cmd = NULL;
+	p->path = NULL;
 }
 
 void	freepipex(t_pipex *p)
 {
-	if (p->cmd[0] != NULL)
-		freetab(p->cmd[0]);
-	if (p->path[0] != NULL)
-		free(p->path[0]);
-	if (p->cmd[1] != NULL)
-		freetab(p->cmd[1]);
-	if (p->path[1] != NULL)
-		free(p->path[1]);
+	if (p->cmd != NULL)
+		freetab(p->cmd);
+	if (p->path != NULL)
+		free(p->path);
 }

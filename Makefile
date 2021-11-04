@@ -11,7 +11,7 @@ SRCS += ft_strjoin.c
 
 OBJS_DIR = obj
 OBJS = $(addprefix $(OBJS_DIR)/,$(SRCS:.c=.o))
-CC = clang -Wall -Wextra -Werror
+CC = gcc -Wall -Wextra -Werror
 
 all : $(OBJS_DIR) $(NAME)
 

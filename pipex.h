@@ -19,19 +19,20 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <stdlib.h>
+# include <errno.h>
+# include <string.h>
 
 typedef struct s_pipex
 {
-	char	**cmd[2];
-	char	*path[2];
-	int		inpt[2];
-	int		oupt[2];
-	int		pipefd[2];
-	int		pid[2];
+	char	**cmd;
+	char	*path;
+	int		infile;
+	int		oufile;
+	int		nbfunct;
 }			t_pipex;
 
 char	*findpath(char *fnct, char **envp);
-void	fillpipex(t_pipex *p, char *str, char **envp, int index);
+void	fillpipex(t_pipex *p, char *str, char **envp);
 int		main(int ac, char **av, char **envp);
 void	freetab(char **tab);
 void	initpipex(t_pipex *p);
@@ -44,8 +45,8 @@ char	*ft_strnstr(const char *haystack,
 			const char *needle, size_t len);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 int		printerror(char *str1, char *str2, int err);
-void	errorfree(t_pipex *p);
-void	process(t_pipex *p, char **envp, int index);
+int	printperror(char *str);
+void	process(t_pipex *p, char *str, char **envp);
 void	createforks(t_pipex *p, char **av, char **envp);
 
 #endif
