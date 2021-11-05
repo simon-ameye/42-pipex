@@ -37,7 +37,9 @@ char	*findpath(char *fnct, char **envp)
 		free(testpath2);
 	}
 	freetab(paths);
-	printerror("command not found: ", fnct, EXIT_FAILURE);
+	ft_putstr_fd("command not found: ", 2);
+	ft_putstr_fd(fnct, 2);
+	ft_putstr_fd("\n", 2);
 	return (NULL);
 }
 

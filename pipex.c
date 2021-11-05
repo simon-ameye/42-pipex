@@ -14,14 +14,19 @@
 
 void	process(t_pipex *p, char *str, char **envp)
 {
+	//ft_putstr_fd("just before fill\n", 2);
 	fillpipex(p, str, envp);
 	if (p->path != NULL)
 	{
+		//ft_putstr_fd("just before execve\n", 2);
 		if (execve(p->path, p->cmd, envp) == -1)
 		{
+			//ft_putstr_fd("execve = -1\n", 2);
 			freepipex(p);
-			exit(printperror(""));
+			//ft_putstr_fd("just before exit\n", 2);
+			exit(perrorstring(str));
 		}
+		//ft_putstr_fd("just after execve\n", 2);
 	}
 	freepipex(p);
 	exit(EXIT_FAILURE);
@@ -35,7 +40,9 @@ char	*threatcmd(char *cmd, char **envp)
 		{
 			if (access(cmd, F_OK) != 0)
 			{
-				printerror("no such file or directory: ", cmd, EXIT_FAILURE);
+				ft_putstr_fd("no such file or directory: ", 2);
+				ft_putstr_fd(cmd, 2);
+				ft_putstr_fd("\n", 2);
 				return (NULL);
 			}
 			return (ft_strjoin(cmd, ""));
@@ -73,30 +80,38 @@ void	createforks(t_pipex *p, char **av, char **envp)
 		if (pipe(pipefd) == -1)
 			exit(1);
 		pid = fork();
-		printf("tmpfd %i, i %i, nbfunct %i, pipefd[0] %i\n", tmpfd, i, p->nbfunct, pipefd[0]);
-		printf("lets process %s\n", av[2 + i]);
+		//printf("BEGIN tmpfd %i, i %i, nbfunct %i, pipefd[0] %i, PID %i\n", tmpfd, i, p->nbfunct, pipefd[0], pid);
+		//printf("lets process %s\n", av[2 + i]);
 		if (pid < 0)
 			exit(1);
 		else if (pid == 0)
 		{
-			if  (tmpfd == -1)
-				exit(EXIT_FAILURE);
-			printf("processing %s\n", av[2 + i]);
+			//printf("processing %s\n", av[2 + i]);
 			dup2(tmpfd, STDIN_FILENO);
 			if (i == p->nbfunct - 1)
+			{
 				dup2(p->oufile, STDOUT_FILENO);
+				if (p->oufile == -1)
+					exit(EXIT_FAILURE);
+			}
 			else
 				dup2(pipefd[1], STDOUT_FILENO);
+			if  (tmpfd == -1)
+				exit(EXIT_FAILURE);
 			process(p, av[2 + i], envp);
 		}
 		else
 		{
-			waitpid(-1, NULL, 0);
+			//ft_putstr_fd("waiting son\n", 2);
+			waitpid(pid, NULL, 0);
+			//ft_putstr_fd("son just finished\n", 2);
 			close(pipefd[1]);
 			close(tmpfd);
-			dup2(pipefd[0], tmpfd);
-			close(pipefd[0]);
+			//dup2(pipefd[0], tmpfd);
+			tmpfd = pipefd[0];
+			//close(pipefd[0]);
 		}
+		//printf("END tmpfd %i, i %i, nbfunct %i, pipefd[0] %i, PID %i\n", tmpfd, i, p->nbfunct, pipefd[0], pid);
 		i++;
 	}
 	close(p->oufile);
@@ -107,24 +122,17 @@ int	main(int ac, char **av, char **envp)
 	t_pipex	p;
 
 	initpipex(&p);
-	if (ac != 5)
-		return (printerror("Error: Wrong arguments", "", EXIT_FAILURE));
+	if (ac < 5)
+	{
+		ft_putstr_fd("Error: Wrong arguments\n", 2);
+		return (EXIT_FAILURE);
+	}
 	p.infile = open(av[1], O_RDONLY, 0777);
 	if (p.infile == -1)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(av[1], 2);
-		ft_putstr_fd("\n", 2);
-	}
-	p.oufile = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (p.oufile == -1)
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(av[4], 2);
-		ft_putstr_fd("\n", 2);
-	}
+		perrorstring(av[1]);
 	p.nbfunct = ac - 3;
+	p.oufile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (p.oufile == -1)
+		perrorstring(av[ac - 1]);
 	createforks(&p, av, envp);
 }

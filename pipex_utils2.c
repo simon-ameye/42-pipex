@@ -12,13 +12,6 @@
 
 #include "pipex.h"
 
-int	printperror(char *str)
-{
-	perror("");
-	ft_putstr_fd(str, 2);
-	return(EXIT_FAILURE);
-}
-
 void	ft_putstr_fd(char *str, int fd)
 {
 	if (!str)
@@ -26,10 +19,11 @@ void	ft_putstr_fd(char *str, int fd)
 	write(fd, str, ft_strlen(str));
 }
 
-int	printerror(char *str1, char *str2, int err)
+int		perrorstring(char *str)
 {
-	ft_putstr_fd(str1, 2);
-	ft_putstr_fd(str2, 2);
+	ft_putstr_fd(strerror(errno), 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(str, 2);
 	ft_putstr_fd("\n", 2);
-	return (err);
+	return (EXIT_FAILURE);
 }

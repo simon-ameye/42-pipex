@@ -44,9 +44,8 @@ size_t	ft_strlen(const char *str);
 char	*ft_strnstr(const char *haystack,
 			const char *needle, size_t len);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-int		printerror(char *str1, char *str2, int err);
-int	printperror(char *str);
 void	process(t_pipex *p, char *str, char **envp);
 void	createforks(t_pipex *p, char **av, char **envp);
+int		perrorstring(char *str);
 
 #endif

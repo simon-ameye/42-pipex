@@ -1,0 +1,3 @@
+	while (i <= p->nbfunct - 1)
+			//ft_putstr_fd("waiting son\n", 2);
+			waitpid(pid, NULL, 0);
