@@ -29,6 +29,8 @@ typedef struct s_pipex
 	int		infile;
 	int		oufile;
 	int		nbfunct;
+	int		pipefd[2];
+	int		tmpfd;
 }			t_pipex;
 
 char	*findpath(char *fnct, char **envp);
@@ -47,5 +49,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 void	process(t_pipex *p, char *str, char **envp);
 void	createforks(t_pipex *p, char **av, char **envp);
 int		perrorstring(char *str);
+void	createforks(t_pipex *p, char **av, char **envp);
+char	*printstrings(char *str1, char *str2, char *str3);
+char	*threatcmd(char *cmd, char **envp);
 
 #endif

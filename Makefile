@@ -3,7 +3,8 @@ INC = pipex.h
 
 SRCS += pipex.c
 SRCS += pipex_utils.c
-SRCS += pipex_utils2.c
+SRCS += pipex_tabs.c
+SRCS += pipex_print.c
 SRCS += ft_substr.c
 SRCS += ft_split.c
 SRCS += ft_strnstr.c

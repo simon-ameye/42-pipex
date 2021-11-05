@@ -12,6 +12,19 @@
 
 #include "pipex.h"
 
+void	fillpipex(t_pipex *p, char *str, char **envp)
+{
+	if (str != NULL)
+	{
+		if (str[0] != '\0')
+		{
+			p->cmd = ft_split(str, ' ');
+			if (p->cmd != NULL)
+				p->path = threatcmd((p->cmd)[0], envp);
+		}
+	}
+}
+
 char	*findpath(char *fnct, char **envp)
 {
 	int		i;
@@ -37,35 +50,5 @@ char	*findpath(char *fnct, char **envp)
 		free(testpath2);
 	}
 	freetab(paths);
-	ft_putstr_fd("command not found: ", 2);
-	ft_putstr_fd(fnct, 2);
-	ft_putstr_fd("\n", 2);
-	return (NULL);
-}
-
-void	freetab(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
-
-void	initpipex(t_pipex *p)
-{
-	p->cmd = NULL;
-	p->path = NULL;
-}
-
-void	freepipex(t_pipex *p)
-{
-	if (p->cmd != NULL)
-		freetab(p->cmd);
-	if (p->path != NULL)
-		free(p->path);
+	return (printstrings("command not found: ", fnct, "\n"));
 }
