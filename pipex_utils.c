@@ -12,19 +12,6 @@
 
 #include "pipex.h"
 
-void	fillpipex(t_pipex *p, char *str, char **envp)
-{
-	if (str != NULL)
-	{
-		if (str[0] != '\0')
-		{
-			p->cmd = ft_split(str, ' ');
-			if (p->cmd != NULL)
-				p->path = threatcmd((p->cmd)[0], envp);
-		}
-	}
-}
-
 char	*findpath(char *fnct, char **envp)
 {
 	int		i;
@@ -51,4 +38,33 @@ char	*findpath(char *fnct, char **envp)
 	}
 	freetab(paths);
 	return (printstrings("command not found: ", fnct, "\n"));
+}
+
+char	*threatcmd(char *cmd, char **envp)
+{
+	if (cmd != NULL)
+	{
+		if (cmd[0] == '/' || cmd[0] == '.' || cmd[0] == '~')
+		{
+			if (access(cmd, F_OK) != 0)
+				return (printstrings("No such file or directory: ", cmd, "\n"));
+			return (ft_strjoin(cmd, ""));
+		}
+		else
+			return (findpath(cmd, envp));
+	}
+	return (NULL);
+}
+
+void	fillpipex(t_pipex *p, char *str, char **envp)
+{
+	if (str != NULL)
+	{
+		if (str[0] != '\0')
+		{
+			p->cmd = ft_split(str, ' ');
+			if (p->cmd != NULL)
+				p->path = threatcmd((p->cmd)[0], envp);
+		}
+	}
 }

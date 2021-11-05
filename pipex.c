@@ -27,22 +27,6 @@ void	process(t_pipex *p, char *str, char **envp)
 	exit(EXIT_FAILURE);
 }
 
-char	*threatcmd(char *cmd, char **envp)
-{
-	if (cmd != NULL)
-	{
-		if (cmd[0] == '/' || cmd[0] == '.' || cmd[0] == '~')
-		{
-			if (access(cmd, F_OK) != 0)
-				return (printstrings("no such file or directory: ", cmd, "\n"));
-			return (ft_strjoin(cmd, ""));
-		}
-		else
-			return (findpath(cmd, envp));
-	}
-	return (NULL);
-}
-
 void	child(t_pipex *p, char *str, int i, char **envp)
 {
 	dup2(p->tmpfd, STDIN_FILENO);
