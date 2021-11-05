@@ -20,11 +20,12 @@ void	process(t_pipex *p, char *str, char **envp)
 		if (execve(p->path, p->cmd, envp) == -1)
 		{
 			freepipex(p);
-			exit(perrorstring(str));
+			perrorstring(str);
+			exit(127);
 		}
 	}
 	freepipex(p);
-	exit(EXIT_FAILURE);
+	exit(127);
 }
 
 void	child(t_pipex *p, char *str, int i, char **envp)
@@ -61,7 +62,8 @@ void	createforks(t_pipex *p, char **av, char **envp)
 			child(p, av[2 + i], i, envp);
 		else
 		{
-			waitpid(pid, NULL, 0);
+			waitpid(pid, &(p->code), 0);
+			p->code = WEXITSTATUS(p->code);
 			close(p->pipefd[1]);
 			close(p->tmpfd);
 			p->tmpfd = p->pipefd[0];
@@ -83,10 +85,14 @@ int	main(int ac, char **av, char **envp)
 	}
 	p.infile = open(av[1], O_RDONLY, 0777);
 	if (p.infile == -1)
+	{
+		p.code = 1;
 		perrorstring(av[1]);
+	}
 	p.nbfunct = ac - 3;
 	p.oufile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (p.oufile == -1)
 		perrorstring(av[ac - 1]);
 	createforks(&p, av, envp);
+	return (p.code);
 }

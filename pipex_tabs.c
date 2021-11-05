@@ -29,6 +29,7 @@ void	initpipex(t_pipex *p)
 {
 	p->cmd = NULL;
 	p->path = NULL;
+	p->code = 0;
 }
 
 void	freepipex(t_pipex *p)

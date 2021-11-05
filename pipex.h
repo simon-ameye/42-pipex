@@ -13,7 +13,6 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include <stdio.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/types.h>
@@ -31,6 +30,7 @@ typedef struct s_pipex
 	int		nbfunct;
 	int		pipefd[2];
 	int		tmpfd;
+	int		code;
 }			t_pipex;
 
 char	*findpath(char *fnct, char **envp);
