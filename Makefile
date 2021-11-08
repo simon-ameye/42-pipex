@@ -26,8 +26,6 @@ $(OBJS_DIR)/%.o : %.c
 	@echo "compiling $<"
 	@$(CC) -c $< -o $@
 
-bonus : all
-
 clean:
 	rm -rf $(OBJS)
 

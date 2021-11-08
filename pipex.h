@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 14:52:26 by sameye            #+#    #+#             */
-/*   Updated: 2021/11/03 18:48:52 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/08 17:04:39 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <errno.h>
 # include <string.h>
+# include <stdio.h>
 
 typedef struct s_pipex
 {
@@ -29,7 +30,7 @@ typedef struct s_pipex
 	int		oufile;
 	int		nbfunct;
 	int		pipefd[2];
-	int		tmpfd;
+	//int		tmpfd;
 	int		code;
 }			t_pipex;
 

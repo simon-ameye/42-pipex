@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/11/08 15:01:57 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/08 17:32:48 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,49 +28,58 @@ void	process(t_pipex *p, char *str, char **envp)
 	exit(127);
 }
 
-void	child(t_pipex *p, char *str, int i, char **envp)
+void	child2(t_pipex *p, char *str, char **envp)
 {
-	dup2(p->tmpfd, STDIN_FILENO);
-	if (i == p->nbfunct - 1)
-	{
-		dup2(p->oufile, STDOUT_FILENO);
-		if (p->oufile == -1)
-			exit(EXIT_FAILURE);
-	}
-	else
-		dup2(p->pipefd[1], STDOUT_FILENO);
-	if (p->tmpfd == -1)
+	dup2(p->pipefd[0], STDIN_FILENO);
+	dup2(p->oufile, STDOUT_FILENO);
+	close(p->pipefd[1]);
+	if (p->pipefd[0] == -1 || p->oufile == -1)
 		exit(EXIT_FAILURE);
 	process(p, str, envp);
+	exit(127);
+}
+
+void	child1(t_pipex *p, char *str, char **envp)
+{
+	dup2(p->infile, STDIN_FILENO);
+	dup2(p->pipefd[1], STDOUT_FILENO);
+	close(p->pipefd[0]);
+	if (p->infile == -1 || p->pipefd[1] == -1)
+		exit(EXIT_FAILURE);
+	close(p->infile);
+	process(p, str, envp);
+	exit(127);
 }
 
 void	createforks(t_pipex *p, char **av, char **envp)
 {
-	int		i;
-	pid_t	pid;
+	int pid1;
+	int pid2;
 
-	p->tmpfd = p->infile;
-	i = 0;
-	while (i <= p->nbfunct - 1)
-	{
-		if (pipe(p->pipefd) == -1)
-			exit(1);
-		pid = fork();
-		if (pid < 0)
-			exit(1);
-		else if (pid == 0)
-			child(p, av[2 + i], i, envp);
-		else
-		{
-			waitpid(pid, &(p->code), 0);
-			p->code = WEXITSTATUS(p->code);
-			close(p->pipefd[1]);
-			close(p->tmpfd);
-			p->tmpfd = p->pipefd[0];
-		}
-		i++;
-	}
+	if (pipe(p->pipefd) == -1)
+		exit(1);
+	pid1 = fork();
+	if (pid1 < 0)
+		return (perror("Fork: "));
+	else if (pid1 == 0)
+		child1(p, av[2], envp);
+	pid2 = fork();
+	if (pid2 < 0)
+		return (perror("Fork: "));
+	else if (pid2 == 0)
+		child2(p, av[3], envp);
+
+	close(p->pipefd[0]);
+	close(p->pipefd[1]);
+
+	waitpid(pid1, &(p->code), 0);
+	p->code = WEXITSTATUS(p->code);
+	close(p->infile);
+
+	waitpid(pid2, &(p->code), 0);
+	p->code = WEXITSTATUS(p->code);
 	close(p->oufile);
+
 }
 
 int	main(int ac, char **av, char **envp)
