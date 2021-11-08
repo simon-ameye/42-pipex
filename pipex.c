@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/11/03 18:40:26 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/08 15:01:57 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	main(int ac, char **av, char **envp)
 		ft_putstr_fd("Error: Wrong arguments\n", 2);
 		return (EXIT_FAILURE);
 	}
-	p.infile = open(av[1], O_RDONLY, 0777);
+	p.infile = open(av[1], O_RDONLY);
 	if (p.infile == -1)
 	{
 		p.code = 1;

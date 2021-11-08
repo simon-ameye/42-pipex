@@ -6,11 +6,25 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 20:10:11 by sameye            #+#    #+#             */
-/*   Updated: 2021/11/03 18:46:12 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/08 14:53:57 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+char	**ft_findpaths(char **envp)
+{
+	int i;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strnstr(envp[i], "PATH=", 5) != NULL)
+			return (ft_split(envp[i] + 5, ':'));
+		i++;
+	}
+	return (NULL);
+}
 
 char	*findpath(char *fnct, char **envp)
 {
@@ -19,24 +33,25 @@ char	*findpath(char *fnct, char **envp)
 	char	*testpath1;
 	char	*testpath2;
 
-	i = 0;
-	while (ft_strnstr(envp[i], "PATH", 4) == NULL)
-		i++;
-	paths = ft_split(envp[i] + 5, ':');
-	i = -1;
-	while (paths[++i])
+	paths = ft_findpaths(envp);
+	if (paths)
 	{
-		testpath1 = ft_strjoin(paths[i], "/");
-		testpath2 = ft_strjoin(testpath1, fnct);
-		free(testpath1);
-		if (access(testpath2, F_OK) == 0)
+		i = 0;
+		while (paths[i])
 		{
-			freetab(paths);
-			return (testpath2);
+			testpath1 = ft_strjoin(paths[i], "/");
+			testpath2 = ft_strjoin(testpath1, fnct);
+			free(testpath1);
+			if (access(testpath2, F_OK) == 0)
+			{
+				freetab(paths);
+				return (testpath2);
+			}
+			free(testpath2);
+			i++;
 		}
-		free(testpath2);
+		freetab(paths);
 	}
-	freetab(paths);
 	return (printstrings("command not found: ", fnct, "\n"));
 }
 
