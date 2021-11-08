@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 13:06:04 by sameye            #+#    #+#             */
-/*   Updated: 2021/11/08 17:32:48 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/08 17:37:28 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ void	child1(t_pipex *p, char *str, char **envp)
 
 void	createforks(t_pipex *p, char **av, char **envp)
 {
-	int pid1;
-	int pid2;
+	int	pid1;
+	int	pid2;
 
 	if (pipe(p->pipefd) == -1)
 		exit(1);
@@ -68,18 +68,14 @@ void	createforks(t_pipex *p, char **av, char **envp)
 		return (perror("Fork: "));
 	else if (pid2 == 0)
 		child2(p, av[3], envp);
-
 	close(p->pipefd[0]);
 	close(p->pipefd[1]);
-
 	waitpid(pid1, &(p->code), 0);
 	p->code = WEXITSTATUS(p->code);
 	close(p->infile);
-
 	waitpid(pid2, &(p->code), 0);
 	p->code = WEXITSTATUS(p->code);
 	close(p->oufile);
-
 }
 
 int	main(int ac, char **av, char **envp)

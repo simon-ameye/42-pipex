@@ -6,7 +6,7 @@
 /*   By: sameye <sameye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/27 14:52:26 by sameye            #+#    #+#             */
-/*   Updated: 2021/11/08 17:04:39 by sameye           ###   ########.fr       */
+/*   Updated: 2021/11/08 17:40:05 by sameye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ typedef struct s_pipex
 	int		oufile;
 	int		nbfunct;
 	int		pipefd[2];
-	//int		tmpfd;
 	int		code;
 }			t_pipex;
 
