@@ -83,7 +83,7 @@ int	main(int ac, char **av, char **envp)
 	t_pipex	p;
 
 	initpipex(&p);
-	if (ac < 5)
+	if (ac != 5)
 	{
 		ft_putstr_fd("Error: Wrong arguments\n", 2);
 		return (EXIT_FAILURE);
@@ -95,7 +95,7 @@ int	main(int ac, char **av, char **envp)
 		perrorstring(av[1]);
 	}
 	p.nbfunct = ac - 3;
-	p.oufile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	p.oufile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (p.oufile == -1)
 		perrorstring(av[ac - 1]);
 	createforks(&p, av, envp);
